@@ -1,0 +1,56 @@
+kind: pipeline
+type: docker
+name: publish
+
+clone:
+  skip_verify: true
+
+steps:
+  - name: docker-build
+    image: plugins/docker
+    settings:
+      compress: true
+      squash: true
+      force_tag: true
+      insecure: true
+      registry: docker.registry.bawcat.wiki
+      repo: docker.registry.bawcat.wiki/ogreks/share-car
+      username:
+        from_secret: internal.docker.username
+      password:
+        from_secret: internal.docker.password
+      debug: true
+      use_cache: true
+      purge: true
+  - name: deploy
+    image: appleboy/drone-ssh
+    settings:
+      host:
+        from_secret: internal.ssh.host
+      user:
+        from_secret: internal.ssh.user
+      password:
+        from_secret: internal.ssh.passwd
+      script:
+        - docker pull docker.registry.bawcat.wiki/ogreks/share-car
+        - docker rm $(docker stop share-car)
+        - docker run -d --restart=always --name share-car -p 8880:80 --privileged=true docker.registry.bawcat.wiki/ogreks/share-car:latest
+        - docker image prune -a -f # 删除无用的老版本
+  
+  - name: notify
+    image: sinlov/drone-feishu-group-robot:latest
+    pull: if-not-exists
+    settings:
+      feishu_webhook:
+        from_secret: drone-notify-webhook-token
+      feishu_msg_title: "三狗官网"
+    when:
+      status: # only support failure/success,  both open will send anything
+        - failure
+        - success
+trigger:
+  branch:
+    - master
+  event:
+    - pull_request
+    - push

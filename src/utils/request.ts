@@ -1,6 +1,7 @@
 import { message } from 'ant-design-vue';
 import axios, { AxiosRequestConfig } from 'axios';
 import { BASE_URL } from '@/config';
+import { useSystemStore } from '@/store/system.ts';
 import { useUserStore } from '@/store/user.ts';
 import { getToken, removeToken } from '@/utils/auth.ts';
 
@@ -21,6 +22,7 @@ instance.interceptors.request.use((config) => {
 
 instance.interceptors.response.use(
   (response) => {
+    useSystemStore().initTimeStamp(new Date(response.headers.date).getTime());
     return response.data.data;
   },
   (error) => {

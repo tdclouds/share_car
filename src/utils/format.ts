@@ -9,6 +9,6 @@ export function duration(time: number, unit?: DurationUnitType) {
   return dayjs.duration(time, unit).format('HH:mm:ss');
 }
 
-export function getUTCDate() {
-  return dayjs().utc().format('YYYY-MM-DD hh:mm:ss');
+export function getUTCDate(timeStamp: number = Date.now()) {
+  return dayjs(timeStamp).utc().format('YYYY-MM-DD HH:mm:ss');
 }

@@ -1,15 +1,17 @@
 <script lang="ts" setup>
 import { computed, reactive, ref, watch } from 'vue';
-import { useDarkMode, useRequest } from 'vue-hooks-plus';
+import { useDarkMode } from 'vue-hooks-plus';
 import { useRoute, useRouter } from 'vue-router';
 import { MenuProps } from 'ant-design-vue';
 import { BASE_URL } from '@/config';
+import { useSystemStore } from '@/store/system.ts';
 import { useUserStore } from '@/store/user.ts';
 import { getUTCDate } from '@/utils/format.ts';
 
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
+const systemStore = useSystemStore();
 
 const [darkMode] = useDarkMode();
 const headerStyle = reactive({
@@ -58,16 +60,10 @@ function clickMenu({ key }: { key: string }) {
   router.push(key);
 }
 
-const { data: serverTime } = useRequest(
-  () =>
-    new Promise((resolve) => {
-      resolve(getUTCDate());
-    }),
-  {
-    pollingInterval: 1000,
-    pollingWhenHidden: false,
-  },
-);
+const serverTime = computed(() => {
+  return getUTCDate(systemStore.timeStamp);
+});
+
 const logout = userStore.logout;
 
 function goLogin() {
@@ -130,9 +126,8 @@ function goLogin() {
         <a-button type="link">隐私政策</a-button>
       </div>
       <div>
-        服务器时间：<span class="text-blue-500 cursor-pointer">{{
-          serverTime
-        }}</span>
+        <span>服务器时间：</span>
+        <span class="text-blue-500 cursor-pointer">{{ serverTime }}</span>
       </div>
     </a-layout-footer>
   </a-layout>

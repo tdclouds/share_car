@@ -52,7 +52,7 @@ router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore();
   const allRoute = router.getRoutes();
   const hasRoute = allRoute.find((route) => route.path === to.path);
-  console.log(token, userStore.account_id);
+
   if (token && !userStore.account_id) {
     await userStore.getUserInfo();
   }

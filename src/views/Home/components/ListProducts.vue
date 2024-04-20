@@ -34,7 +34,7 @@ onMounted(() => {
       v-for="item in tableData"
       :key="item.gd_no"
       :to="'/detail?id=' + item.gd_no"
-      class="image-card flex pointer w-full rounded-xl border dark:border-slate-500 overflow-hidden bg-gray-100 dark:bg-gray-600 dark:shadow-gray-700 hover:text-blue-400 hover:shadow-xl mb-6"
+      class="image-card flex pointer w-full rounded-xl border dark:border-slate-500 overflow-hidden bg-gray-100 dark:bg-gray-800 dark:shadow-gray-700 hover:text-blue-400 hover:shadow-xl mb-6"
     >
       <img
         :alt="item.gd_name"

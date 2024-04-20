@@ -104,7 +104,7 @@ onMounted(() => {
         :style="{
           height: size.height + 'px',
         }"
-        class="flex-1 max-h-[352px] overflow-auto scrollbar-width-none bg-white border rounded-xl"
+        class="flex-1 max-h-[352px] overflow-auto scrollbar-width-none bg-white dark:bg-gray-800 dark:border-gray-900 border rounded-xl"
       >
         <div class="p-5 flex justify-between items-center">
           <h4>套餐</h4>
@@ -114,7 +114,7 @@ onMounted(() => {
         </div>
         <template v-for="item in copilotSessionList" :key="item.source">
           <a-divider class="m-0" />
-          <div class="hover:bg-gray-100 p-5">
+          <div class="hover:bg-gray-100 dark:hover:bg-gray-900 p-5">
             <div class="flex items-center justify-between">
               <h4>{{ item.source }}</h4>
               <span>总时长：{{ item.recharge_time_label }}</span>
@@ -140,7 +140,9 @@ onMounted(() => {
       </div>
 
       <div ref="serverRef" class="w-[300px] flex flex-col gap-5 flex-shrink-0">
-        <div class="bg-white border rounded-xl p-5">
+        <div
+          class="bg-white dark:bg-gray-800 dark:border-gray-900 border rounded-xl p-5"
+        >
           <div class="flex justify-between items-center mb-2">
             <h4 class="">我的钱包</h4>
             <router-link to="/purse"

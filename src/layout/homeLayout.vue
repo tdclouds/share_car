@@ -117,7 +117,7 @@ function goLogin() {
         <a-button @click="goLogin">登录</a-button>
       </span>
     </a-layout-header>
-    <a-layout-content class="dark:text-white pt-16 flex-1 content">
+    <a-layout-content class="dark:text-white pt-20 flex-1 content">
       <router-view />
     </a-layout-content>
     <a-layout-footer class="flex justify-between">
@@ -127,7 +127,7 @@ function goLogin() {
       </div>
       <div>
         <span>服务器时间：</span>
-        <span class="text-blue-500 cursor-pointer">{{ serverTime }}</span>
+        <span class="text-blue-500">{{ serverTime }}</span>
       </div>
     </a-layout-footer>
   </a-layout>

@@ -12,6 +12,7 @@ import {
   getPayType,
 } from '@/api/order.ts';
 import { useUserStore } from '@/store/user.ts';
+import { formatPrice } from '@/utils/format.ts';
 import request from '@/utils/request.ts';
 
 const route = useRoute();
@@ -67,25 +68,8 @@ const totalPrice = computed(() => {
       total = detail.value.retail_price * formData.buy_num;
     }
   }
-  return computeTotalPrice(total);
+  return formatPrice(total);
 });
-
-function computeTotalPrice(total: number) {
-  let res = '';
-  const g = Math.floor(total / 10000);
-  const s = Math.floor((total % 10000) / 100);
-  const c = total % 100;
-  if (g) {
-    res += g + ' 金币';
-  }
-  if (s) {
-    res += s + ' 银币';
-  }
-  if (c) {
-    res += c + ' 铜币';
-  }
-  return res;
-}
 
 function getDetail() {
   getGoodDetail(formData.gd_no as string)
@@ -193,9 +177,8 @@ function handleBuy() {
     .then((res) => {
       orderParams.orderNo = res.order_no;
       getPayAddress();
-      visibleBuyModal.value = false;
     })
-    .finally(() => {
+    .catch(() => {
       BuySubmitLoading.value = false;
     });
 }
@@ -213,10 +196,15 @@ function getPayAddress() {
     request({
       url: res.data.data.hook_url,
       method: 'post',
-    }).then(() => {
-      message.success('支付成功');
-      router.push('/order');
-    });
+    })
+      .then(() => {
+        message.success('支付成功');
+        router.push('/order');
+      })
+      .finally(() => {
+        BuySubmitLoading.value = false;
+        visibleBuyModal.value = false;
+      });
   });
 }
 
@@ -245,8 +233,8 @@ onMounted(() => {
     <div class="w-[600px] mr-4">
       <div class="flex bg-white dark:bg-gray-700 p-4 rounded mb-4">
         <img :src="detail.picture" alt="" class="w-28 h-28 rounded" />
-        <div class="flex-1 px-4">
-          <p class="text-4xl text-gray-800 dark:text-gray-100">
+        <div class="flex-1 pl-4">
+          <p class="text-4xl text-gray-800 dark:text-gray-100 mb-8">
             <span>{{ detail.gd_name }}</span>
           </p>
           <div class="flex justify-between items-end">
@@ -255,18 +243,19 @@ onMounted(() => {
               <span class="mr-4">库存：{{ detail.in_stock }}</span>
             </p>
             <span class="text-red-500 text-2xl"
-              >单价：{{ detail.retail_price_label }}</span
+              >单价：{{ formatPrice(detail.retail_price) }}</span
             >
           </div>
         </div>
       </div>
-      <div class="bg-white dark:bg-gray-700 p-4 rounded mb-4">
-        <span
+      <div class="bg-white dark:bg-gray-700 p-4 flex flex-wrap rounded mb-4">
+        <div
           v-for="tag in detail.gd_keywords"
           :key="formData.gd_no + tag"
           class="py-2 px-4 mr-2 rounded bg-gray-200 text-gray-700 dark:bg-gray-500 dark:text-gray-200"
-          >{{ tag }}</span
         >
+          {{ tag }}
+        </div>
       </div>
       <div class="bg-white dark:bg-gray-700 p-4 rounded mb-4">
         <p class="text-xl mb-2">商品详情：</p>
@@ -276,7 +265,9 @@ onMounted(() => {
         ></p>
       </div>
     </div>
-    <div class="bg-white dark:bg-gray-700 p-4 rounded mb-4 w-[480px]">
+    <div
+      class="bg-white dark:bg-gray-700 p-4 rounded mb-4 w-[480px] h-[min-content]"
+    >
       <div class="flex justify-between items-center mb-2">
         <p class="text-xl">购买数量：</p>
         <div class="flex">
@@ -297,7 +288,7 @@ onMounted(() => {
             >{{ item.buy_num }}</span
           >个按照<span
             class="px-2 py-1 border-dashed border-gray-400 rounded text-red-500"
-            >{{ computeTotalPrice(item.price) }}</span
+            >{{ formatPrice(item.price) }}</span
           >售卖
         </p>
       </div>
@@ -359,6 +350,9 @@ onMounted(() => {
       <a-button type="primary">首页</a-button>
     </template>
   </a-result>
+
+  <a-back-top />
+
   <a-modal
     v-model:open="visibleBuyModal"
     :maskClosable="false"
@@ -366,7 +360,9 @@ onMounted(() => {
     title="购买提示"
   >
     <template #footer>
-      <a-button @click="visibleBuyModal = false">再考虑一下</a-button>
+      <a-button @click="visibleBuyModal = false" :disabled="BuySubmitLoading"
+        >再考虑一下</a-button
+      >
       <a-button :loading="BuySubmitLoading" type="primary" @click="handleBuy"
         >已知晓，继续购买
       </a-button>

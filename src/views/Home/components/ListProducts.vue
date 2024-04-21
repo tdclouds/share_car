@@ -2,6 +2,7 @@
 import { onMounted, reactive, ref, toRaw } from 'vue';
 import { useRequest } from 'vue-hooks-plus';
 import { getGoodList, goodListItem, goodListParams } from '@/api/good.ts';
+import { formatPrice } from '@/utils/format.ts';
 
 const params = reactive<goodListParams>({
   limit: '20',
@@ -29,34 +30,36 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="list flex flex-wrap w-[1200px] pt-5">
+  <div class="list flex flex-wrap w-[1200px] gap-5">
     <router-link
       v-for="item in tableData"
       :key="item.gd_no"
       :to="'/detail?id=' + item.gd_no"
-      class="image-card flex pointer w-full rounded-xl border dark:border-slate-500 overflow-hidden bg-gray-100 dark:bg-gray-800 dark:shadow-gray-700 hover:text-blue-400 hover:shadow-xl mb-6"
+      class="image-card flex pointer w-[590px] rounded-xl border dark:border-gray-700 overflow-hidden bg-gray-100 dark:bg-gray-800 dark:shadow-gray-700 hover:text-blue-400 hover:shadow-xl"
     >
       <img
         :alt="item.gd_name"
         :src="item.picture"
-        class="w-32 h-32"
+        class="w-[138px] h-[138px]"
         loading="lazy"
       />
       <div class="p-2 flex-1">
         <h4 class="text-2xl">{{ item.gd_name }}</h4>
-        <p class="overflow-hidden my-4">
-          <span
+        <div class="overflow-hidden flex my-4">
+          <div
             v-for="tag in item.gd_keywords"
             :key="item.gd_no + tag"
             class="py-1 px-2 mr-1 rounded bg-gray-200 text-gray-800 dark:bg-gray-500 dark:text-gray-200"
-            >{{ tag }}</span
           >
-          <span
+            {{ tag }}
+          </div>
+          <div
             v-if="item.is_automatic"
             class="py-1 px-2 mr-1 rounded bg-gray-200 text-gray-800 dark:bg-gray-500 dark:text-gray-200"
-            >自动发货</span
           >
-        </p>
+            自动发货
+          </div>
+        </div>
         <div class="flex justify-between items-center">
           <p class="">
             <span class="mr-4">库存：{{ item.in_stock }}</span>
@@ -64,7 +67,7 @@ onMounted(() => {
           </p>
           <p class="image-price">
             <span class="text-xl text-blue-600 dark:text-blue-400">{{
-              item.actual_price_label
+              formatPrice(item.retail_price)
             }}</span>
           </p>
         </div>

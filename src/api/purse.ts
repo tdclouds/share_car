@@ -56,6 +56,7 @@ export interface APIGetUsageRecordsParams {
   end_time?: string;
   page?: number;
   limit?: number;
+  order_by?: 'desc' | 'asc';
 }
 
 export interface APIGetUsageRecordsResponseItem {
@@ -88,13 +89,15 @@ export interface APIGetUsageRecordsResponse
 export function getUsageRecords(data: APIGetUsageRecordsParams) {
   return request<APIGetUsageRecordsResponse>({
     url: '/api/service/copilot/recharge',
-    data: data,
+    params: data,
   });
 }
 
 export interface APIGetCopilotServiceResponse {
-  remaining_time: number; // 剩余时间秒
-  is_paused: number; // 是否暂停 1 是 0 否
+  // 剩余时间秒
+  remaining_time: number;
+  // 是否暂停 1 是 0 否
+  is_paused: number;
   paused_time?: string | null;
   start_time?: string | null;
 }

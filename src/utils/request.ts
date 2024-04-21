@@ -22,7 +22,8 @@ instance.interceptors.request.use((config) => {
 
 instance.interceptors.response.use(
   (response) => {
-    useSystemStore().initTimeStamp(new Date(response.headers.date).getTime());
+    const nowTime = response.headers.date || Date.now();
+    useSystemStore().initTimeStamp(new Date(nowTime).getTime());
     return response.data.data;
   },
   (error) => {

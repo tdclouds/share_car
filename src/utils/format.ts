@@ -6,7 +6,8 @@ dayjs.extend(durationPlugin);
 dayjs.extend(utc);
 
 export function duration(time: number, unit: DurationUnitType = 'second') {
-  return dayjs.duration(time, unit).format('HH:mm:ss');
+  const d = dayjs.duration(time, unit);
+  return Math.floor(time / 3600) + ':' + d.format('mm:ss');
 }
 
 export function getUTCDate(timeStamp: number = Date.now()) {

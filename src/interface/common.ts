@@ -8,7 +8,6 @@ export interface filterTable<k> {
   name: keyof k;
   type: string;
   options?: null | filterLabelItem[];
-  value?: null | filterLabelItem[];
 }
 
 export interface APIListResponse<I, P> {

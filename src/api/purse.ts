@@ -22,11 +22,12 @@ export function getCoins() {
 }
 
 export interface APIGetCoinParams {
+  status?: number | null;
   is_use?: string;
   start_time?: string;
   end_time?: string;
-  limit?: number;
-  page?: number;
+  limit: number;
+  page: number;
 }
 
 export interface APIGetCoinResponseItem {
@@ -51,7 +52,7 @@ export function getCoin(type: number, data: APIGetCoinParams) {
 }
 
 export interface APIGetUsageRecordsParams {
-  status?: string;
+  status?: string | null;
   start_time?: string;
   end_time?: string;
   page?: number;

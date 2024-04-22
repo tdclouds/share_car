@@ -1,3 +1,4 @@
+import { useRouter } from 'vue-router';
 import { defineStore } from 'pinia';
 import { getUserInfo, logout } from '@/api/user.ts';
 import { getToken, removeToken } from '@/utils/auth.ts';
@@ -29,6 +30,8 @@ interface state {
   account_id: string;
   userInfo: IUserInfo;
 }
+
+const router = useRouter();
 
 export const useUserStore = defineStore('userStore', {
   state(): state {
@@ -65,6 +68,7 @@ export const useUserStore = defineStore('userStore', {
 
       removeToken();
       this.account_id = '';
+      await router.push('/');
     },
   },
 });

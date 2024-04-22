@@ -21,6 +21,7 @@ const tableColumns = [
 ];
 const coinType = ref(0);
 const params = reactive<APIGetCoinParams>({
+  status: null,
   page: 1,
   limit: 10,
 });

@@ -105,7 +105,7 @@ onMounted(async () => {
         <a-form-item label="钱包">
           <a-select
             v-model:value="coinType"
-            :field-names="{ label: 'type_label', key: 'type' }"
+            :field-names="{ label: 'type_label', value: 'type' }"
             :options="coinList"
             class="w-[180px!important] mr-2 mb-2"
           />

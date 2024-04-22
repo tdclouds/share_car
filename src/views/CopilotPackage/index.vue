@@ -107,7 +107,7 @@ onMounted(getTableList);
             :is="'a-' + item.type"
             v-else
             v-model:value="params[item.name]"
-            :options="item.options"
+            :options="item.value"
             :placeholder="item.label"
             allow-clear
             class="w-[180px!important] mr-2 mb-2"

@@ -151,6 +151,6 @@ export function getCopilotSession(params: APIGetCopilotSessionParams) {
     >
   >({
     url: '/api/service/copilot/sessions',
-    data: params,
+    params,
   });
 }

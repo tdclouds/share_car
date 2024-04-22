@@ -25,3 +25,11 @@ body[class$=dark-mode] .loader {
 .scrollbar-width-none {
   scrollbar-width: none;
 }
+
+html.dark ul,html.dark div {
+  scrollbar-color: #9F9F9F #2C2C2C;
+}
+
+html.dark ul:hover, html.dark div:hover {
+  scrollbar-color: #D1D1D1 #2C2C2C;
+}

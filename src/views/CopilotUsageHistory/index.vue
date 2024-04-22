@@ -1,6 +1,7 @@
 <script lang="ts" name="CopilotUsageHistory" setup>
 import { onMounted, reactive, ref, toRaw, watch } from 'vue';
 import { useRequest } from 'vue-hooks-plus';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 import { TablePaginationConfig } from 'ant-design-vue';
 import {
   APIGetCopilotSessionParams,
@@ -12,10 +13,10 @@ import { filterLabelItem, filterTable } from '@/interface/common.ts';
 const tableColumns = [
   { title: '开始时间', dataIndex: 'start_time' },
   { title: '结束时间', dataIndex: 'end_time' },
-  { title: '使用时间', dataIndex: 'total_chat_req' },
-  { title: '请求次数', dataIndex: 'total_prompt_req' },
-  { title: '对话次数', dataIndex: 'created_at' },
-  { title: '代码提示次数', dataIndex: 'total_time_label' },
+  { title: '使用时间', dataIndex: 'total_time_label' },
+  { title: '请求次数', dataIndex: 'total_req_label' },
+  { title: '对话次数', dataIndex: 'total_req_chat_label' },
+  { title: '代码提示次数', dataIndex: 'total_prompt_req_label' },
 ];
 const params = reactive<APIGetCopilotSessionParams>({
   page: 1,
@@ -124,6 +125,18 @@ onMounted(getTableList);
       :row-key="(record: APIGetCopilotSessionResponseItem) => record.session_no"
       bordered
       class="w-full mb-4"
-    />
+    >
+      <template #headerCell="{ column, title }">
+        <template v-if="column.dataIndex === 'total_prompt_req_label'">
+          {{ title }}
+          <a-tooltip placement="top">
+            <template #title>
+              <span>目前统计代码提示不准确，仅供参考</span>
+            </template>
+            <ExclamationCircleOutlined />
+          </a-tooltip>
+        </template>
+      </template>
+    </a-table>
   </div>
 </template>

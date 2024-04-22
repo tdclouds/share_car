@@ -99,15 +99,12 @@ function goLogin() {
       />
 
       <template v-if="userStore.account_id">
-        <a-dropdown>
+        <a-dropdown placement="bottom">
           <a class="ant-dropdown-link" @click.prevent>
             {{ userInfo.nick_name }}
           </a>
           <template #overlay>
             <a-menu>
-              <router-link to="/order">
-                <a-menu-item>我的订单</a-menu-item>
-              </router-link>
               <a-menu-item @click="logout">退出登录</a-menu-item>
             </a-menu>
           </template>

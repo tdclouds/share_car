@@ -7,7 +7,8 @@ export interface filterTable<k> {
   label: string;
   name: keyof k;
   type: string;
-  options: null | filterLabelItem[];
+  options?: null | filterLabelItem[];
+  value?: null | filterLabelItem[];
 }
 
 export interface APIListResponse<I, P> {

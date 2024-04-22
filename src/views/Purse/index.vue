@@ -14,10 +14,10 @@ import { filterLabelItem, filterTable } from '@/interface/common.ts';
 const tableColumns = [
   { title: '数量', dataIndex: 'num' },
   { title: '余额', dataIndex: 'balance' },
-  { title: '备注信息', dataIndex: 'content' },
-  { title: '过期时间', dataIndex: 'expire_time' },
-  { title: '使用状态', dataIndex: 'is_use_label' },
-  { title: '创建时间', dataIndex: 'created_at' },
+  { title: '备注信息', dataIndex: 'content', width: 370 },
+  { title: '使用状态', dataIndex: 'is_use_label', width: 100 },
+  { title: '过期时间', dataIndex: 'expire_time', width: 160 },
+  { title: '创建时间', dataIndex: 'created_at', width: 160 },
 ];
 const coinType = ref(0);
 const params = reactive<APIGetCoinParams>({
@@ -147,6 +147,12 @@ onMounted(async () => {
       :row-key="(record: APIGetCoinResponseItem) => record.id"
       bordered
       class="w-full mb-4"
-    />
+    >
+      <template #bodyCell="{ column, text }">
+        <template v-if="column.dataIndex === 'content'">
+          <div v-html="text"></div>
+        </template>
+      </template>
+    </a-table>
   </div>
 </template>

@@ -76,7 +76,7 @@ function getDetail() {
     .then((res) => {
       detail.value = {
         ...res,
-        wholesale_price_cnf: res.wholesale_price_cnf
+        wholesale_price_cnf: (res.wholesale_price_cnf || [])
           .map((item) => {
             const arr = item.split('=');
             return {
@@ -85,7 +85,7 @@ function getDetail() {
             };
           })
           .sort((a, b) => b.buy_num - a.buy_num),
-        other_ipu_cnf: res.other_ipu_cnf.map((item) => {
+        other_ipu_cnf: (res.other_ipu_cnf || []).map((item) => {
           const arr = item.split('=');
           return {
             key: arr[0],

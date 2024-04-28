@@ -216,13 +216,14 @@ onMounted(() => {
             </li>
             <li class="flex flex-col justify-between gap-2">
               <a-input
-                v-model:value="redemptionCode"
+                v-model:value.trim="redemptionCode"
                 allow-clear
                 placeholder="兑换码"
               />
               <a-button
                 :loading="useRedemptionCodeLoading"
                 type="primary"
+                :disabled="!redemptionCode"
                 @click="useExchangeCode"
                 >充值
               </a-button>

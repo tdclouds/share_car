@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue';
-import { message } from 'ant-design-vue';
+import { message, Modal } from 'ant-design-vue';
 import {
   APIGetCoinsResponseItem,
   APIGetCopilotServiceResponse,
@@ -9,6 +9,7 @@ import {
   getCoins,
   getCopilotService,
   getUsageRecords,
+  queryRedemptionCode,
   useRedemptionCode,
 } from '@/api/purse.ts';
 import { useSystemStore } from '@/store/system.ts';
@@ -80,6 +81,12 @@ const useRedemptionCodeLoading = ref(false);
 
 // 使用兑换码
 function useExchangeCode() {
+  if (!redemptionCode.value) {
+    Modal.warn({
+      title: '请输入兑换码',
+    });
+    return;
+  }
   useRedemptionCodeLoading.value = true;
   useRedemptionCode(redemptionCode.value)
     .then(() => {
@@ -89,6 +96,29 @@ function useExchangeCode() {
     })
     .finally(() => {
       useRedemptionCodeLoading.value = false;
+    });
+}
+
+const queryRedemptionCodeLoading = ref(false);
+
+// 使用兑换码
+function queryExchangeCode() {
+  if (!redemptionCode.value) {
+    Modal.warn({
+      title: '请输入兑换码',
+    });
+    return;
+  }
+  queryRedemptionCodeLoading.value = true;
+  queryRedemptionCode(redemptionCode.value)
+    .then(() => {
+      redemptionCode.value = '';
+      Modal.success({
+        title: '兑换码有效',
+      });
+    })
+    .finally(() => {
+      queryRedemptionCodeLoading.value = false;
     });
 }
 
@@ -247,13 +277,21 @@ onMounted(() => {
                 allow-clear
                 placeholder="兑换码"
               />
-              <a-button
-                :loading="useRedemptionCodeLoading"
-                type="primary"
-                :disabled="!redemptionCode"
-                @click="useExchangeCode"
-                >充值
-              </a-button>
+              <div class="flex gap-2">
+                <a-button
+                  :loading="queryRedemptionCodeLoading"
+                  class="flex-1"
+                  @click="queryExchangeCode"
+                  >查询
+                </a-button>
+                <a-button
+                  :loading="useRedemptionCodeLoading"
+                  type="primary"
+                  class="flex-1"
+                  @click="useExchangeCode"
+                  >充值
+                </a-button>
+              </div>
             </li>
           </ul>
         </div>

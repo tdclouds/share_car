@@ -8,6 +8,12 @@ export function useRedemptionCode(code: string) {
   });
 }
 
+export function queryRedemptionCode(code: string) {
+  return request({
+    url: `/api/redemption_code/${code}/exists`,
+  });
+}
+
 export interface APIGetCoinsResponseItem {
   type: number;
   type_label: string;

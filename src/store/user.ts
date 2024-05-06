@@ -31,8 +31,6 @@ interface state {
   userInfo: IUserInfo;
 }
 
-const router = useRouter();
-
 export const useUserStore = defineStore('userStore', {
   state(): state {
     return {
@@ -61,6 +59,7 @@ export const useUserStore = defineStore('userStore', {
         .catch(this.logout);
     },
     async logout() {
+      const router = useRouter();
       const token = getToken();
       if (token) {
         await logout();

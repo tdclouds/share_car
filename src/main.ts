@@ -5,6 +5,7 @@ import router from './router';
 import pinia from './store';
 import 'ant-design-vue/dist/reset.css';
 import './style.css';
+import '@/utils/checkUpgrade';
 
 const vm = createApp(App);
 

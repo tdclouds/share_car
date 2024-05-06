@@ -5,6 +5,7 @@ import { theme } from 'ant-design-vue';
 import zhCN from 'ant-design-vue/es/locale/zh_CN';
 import { addClass, removeClass } from 'ant-design-vue/es/vc-util/Dom/class';
 import * as dayjs from 'dayjs';
+import { useSystemStore } from '@/store/system.ts';
 import 'dayjs/locale/zh-cn';
 
 dayjs.locale('zh-cn');
@@ -24,6 +25,7 @@ function toggleDark(value: boolean) {
 
 onMounted(() => {
   toggleDark(darkMode.value);
+  useSystemStore().initTimeStamp();
 });
 </script>
 

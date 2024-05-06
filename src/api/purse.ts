@@ -47,7 +47,7 @@ export interface APIGetCoinResponse
 export function getCoin(type: number, data: APIGetCoinParams) {
   return request<APIGetCoinResponse>({
     url: `/api/coin/${type}`,
-    data,
+    params: data,
   });
 }
 

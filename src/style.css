@@ -33,3 +33,19 @@ html.dark ul,html.dark div {
 html.dark ul:hover, html.dark div:hover {
   scrollbar-color: #D1D1D1 #2C2C2C;
 }
+
+blockquote {
+  position: relative;
+  color: #bbbfc4;
+}
+blockquote::before {
+  position: absolute;
+  left: -16px;
+  content: '';
+  width: 2px;
+  height: 100%;
+  background-color: #bbbfc4;
+}
+blockquote.pl-4::before {
+  left: 0;
+}

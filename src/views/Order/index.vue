@@ -1,7 +1,6 @@
 <script lang="ts" name="Order" setup>
 import { onMounted, reactive, ref, toRaw, watch } from 'vue';
 import { useRequest } from 'vue-hooks-plus';
-import { TablePaginationConfig } from 'ant-design-vue';
 import {
   APIOrderParams,
   APIOrderResponseItem,
@@ -10,54 +9,28 @@ import {
 import { filterLabelItem, filterTable } from '@/interface/common.ts';
 import OrderDetailModal from './components/OrderDetailModal.vue';
 
-const tableColumns = [
-  { title: '订单编号', dataIndex: 'order_no' },
-  { title: '订单类型', dataIndex: 'type_label' },
-  { title: '商品标题', dataIndex: 'title' },
-  { title: '购买数量', dataIndex: 'buy_num' },
-  { title: '订单状态', dataIndex: 'status_label' },
-  { title: '订单金额', dataIndex: 'price_label' },
-  { title: '订单支付金额', dataIndex: 'pay_price_label' },
-  { title: '付款渠道', dataIndex: 'payment_channel' },
-  { title: '第三方事务号', dataIndex: 'trade_no' },
-  { title: '操作', dataIndex: 'operation', fixed: 'right' },
-];
 const params = reactive<APIOrderParams>({
   end_time: '',
   gd_no: '',
   order_no: '',
   start_time: '',
   page: 1,
-  limit: 10,
+  limit: 15,
 });
-const loading = ref(false);
 const pageLoading = ref(false);
 const tableData = ref<APIOrderResponseItem[]>([]);
+const tableTotal = ref<number>(0);
 const tableFilter = ref<filterTable<APIOrderParams>[]>([]);
-const tablePagination = reactive<TablePaginationConfig>({
-  current: params.page,
-  pageSize: params.limit,
-  hideOnSinglePage: true,
-  pageSizeOptions: ['10', '15', '20'],
-  showTotal(total) {
-    return `共 ${total} 条`;
-  },
-  showSizeChanger: true,
-  onChange(page, pageSize) {
-    pageLoading.value = true;
-    params.page = page;
-    params.limit = pageSize;
-    tablePagination.current = page;
-    tablePagination.pageSize = pageSize;
-  },
-  total: 0,
-});
+
+function onChange() {
+  pageLoading.value = true;
+}
 
 const { run: getTableList } = useRequest(
   async () => {
     return getOrderList(toRaw(params)).then((res) => {
       tableData.value = res.list;
-      tablePagination.total = res.total;
+      tableTotal.value = res.total;
       tableFilter.value = res.filter;
       formatLabels();
       pageLoading.value = false;
@@ -82,7 +55,6 @@ function formatLabels() {
 watch(params, () => {
   if (pageLoading.value === false) {
     params.page = 1;
-    tablePagination.current = 1;
   }
   getTableList();
 });
@@ -101,9 +73,9 @@ onMounted(getTableList);
 </script>
 
 <template>
-  <div class="w-[1200px] m-auto">
+  <div class="w-[1200px] max-w-full m-auto">
     <div class="flex items-start justify-between mb-4">
-      <a-form class="filter" layout="inline">
+      <a-form class="filter sm:hidden" layout="inline">
         <a-form-item
           v-for="item in tableFilter"
           :key="item.name"
@@ -133,23 +105,61 @@ onMounted(getTableList);
       </a-form>
     </div>
 
-    <a-table
-      :columns="tableColumns"
-      :dataSource="tableData"
-      :loading="loading"
-      :pagination="tablePagination"
-      :row-key="(record: APIOrderResponseItem) => record.gd_no"
-      bordered
-      class="w-full mb-4"
-    >
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'operation'">
-          <a-button class="mr-1" type="primary" @click="showDetail(record)"
+    <div class="list-box flex flex-wrap gap-5 mb-5">
+      <div
+        class="bg-white dark:bg-gray-800 p-4 rounded sm:w-full"
+        v-for="item in tableData"
+        :key="item.order_no"
+      >
+        <div class="flex items-center justify-between">
+          <span>{{ item.order_no }}</span>
+          <span class="text-blue-600 ml-2" @click="showDetail(item)"
             >详情
-          </a-button>
-        </template>
-      </template>
-    </a-table>
+          </span>
+        </div>
+        <a-divider class="my-2" />
+        <div class="flex items-center justify-between">
+          <div>{{ item.title }}</div>
+          <div
+            :class="
+              {
+                100: 'text-gray-600',
+                200: 'text-orange-500',
+                201: 'text-blue-600',
+                202: 'text-green-600',
+                300: 'text-gray-500',
+                400: 'text-red-500',
+                403: 'text-gray-500',
+              }[item.status]
+            "
+          >
+            {{ item.status_label }}
+          </div>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="label text-gray-600 mt-2">订单金额</div>
+          <div class="content text-gray-600">{{ item.price_label }}</div>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="label text-gray-600 mt-2">订单支付金额</div>
+          <div class="content">{{ item.pay_price_label }}</div>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="label text-gray-600 mt-2">付款渠道</div>
+          <div class="content">{{ item.payment_channel }}</div>
+        </div>
+      </div>
+    </div>
+
+    <a-pagination
+      class="flex justify-center"
+      v-model:current="params.page"
+      v-model:page-size="params.limit"
+      :total="tableTotal"
+      :hide-on-single-page="true"
+      @change="onChange"
+      :show-total="(total: number) => `共 ${total} 条`"
+    />
 
     <OrderDetailModal
       v-if="visibleDetailModal"

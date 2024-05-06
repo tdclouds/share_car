@@ -229,8 +229,11 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if="formData.gd_no" class="detail w-[1100px] mx-auto my-0 flex">
-    <div class="w-[600px] mr-4">
+  <div
+    v-if="formData.gd_no"
+    class="detail w-[1100px] max-w-full sm:flex-wrap mx-auto my-0 flex"
+  >
+    <div class="w-[600px] max-w-full mr-4 sm:mr-0">
       <div class="flex bg-white dark:bg-gray-700 p-4 rounded mb-4">
         <img :src="detail.picture" alt="" class="w-28 h-28 rounded" />
         <div class="flex-1 pl-4">
@@ -238,7 +241,7 @@ onMounted(() => {
             <span>{{ detail.gd_name }}</span>
           </p>
           <div class="flex justify-between items-end">
-            <p>
+            <p class="sm:flex sm:flex-col">
               <span class="mr-4">已售：{{ detail.sales_volume }}</span>
               <span class="mr-4">库存：{{ detail.in_stock }}</span>
             </p>
@@ -260,7 +263,7 @@ onMounted(() => {
       <div class="bg-white dark:bg-gray-700 p-4 rounded mb-4">
         <p class="text-xl mb-2">商品详情：</p>
         <p
-          class="text-gray-500 dark:text-gray-200 py-2"
+          class="text-gray-500 dark:text-gray-200 py-2 break-all"
           v-html="detail.gd_description"
         ></p>
       </div>
@@ -274,7 +277,8 @@ onMounted(() => {
           <a-input-number
             v-model:value="formData.buy_num"
             :controls="false"
-            :max="detail.in_stock"
+            :disabled="detail.in_stock == 0"
+            :max="detail.buy_limit_num"
             :min="1"
             :precision="0"
             class="w-[190px]"

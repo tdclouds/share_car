@@ -30,12 +30,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="list flex flex-wrap w-[1200px] gap-5">
+  <div class="list flex flex-wrap w-[1200px] max-w-full gap-5 mb-5">
     <router-link
       v-for="item in tableData"
       :key="item.gd_no"
       :to="'/detail?id=' + item.gd_no"
-      class="image-card flex pointer w-[590px] rounded-xl border dark:border-gray-700 overflow-hidden bg-gray-100 dark:bg-gray-800 dark:shadow-gray-700 hover:text-blue-400 hover:shadow-xl"
+      class="translate-x-1 bg-white image-card flex relative pointer w-[590px] max-w-full rounded-xl border transition dark:border-gray-700 overflow-hidden dark:bg-gray-800 dark:shadow-gray-700 hover:text-blue-400 hover:shadow-xl"
     >
       <img
         :alt="item.gd_name"
@@ -45,7 +45,7 @@ onMounted(() => {
       />
       <div class="p-2 flex-1">
         <h4 class="text-2xl">{{ item.gd_name }}</h4>
-        <div class="overflow-hidden flex my-4">
+        <div class="overflow-hidden flex flex-wrap gap-1 my-1">
           <div
             v-for="tag in item.gd_keywords"
             :key="item.gd_no + tag"
@@ -61,8 +61,10 @@ onMounted(() => {
           </div>
         </div>
         <div class="flex justify-between items-center">
-          <p class="">
-            <span class="mr-4">库存：{{ item.in_stock }}</span>
+          <p class="flex sm:flex-col">
+            <span class="mr-4 text-gray-900 dark:text-gray-300"
+              >库存：{{ item.in_stock }}</span
+            >
             <span class="text-red-500">已售：{{ item.sales_volume }}</span>
           </p>
           <p class="image-price">
@@ -84,4 +86,8 @@ onMounted(() => {
   />
 </template>
 
-<style scoped></style>
+<style scoped>
+.image-card {
+  animation-fill-mode: backwards;
+}
+</style>

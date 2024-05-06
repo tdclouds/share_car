@@ -1,7 +1,6 @@
 <script lang="ts" name="CopilotPackage" setup>
 import { onMounted, reactive, ref, toRaw, watch } from 'vue';
 import { useRequest } from 'vue-hooks-plus';
-import { TablePaginationConfig } from 'ant-design-vue';
 import {
   APIGetUsageRecordsParams,
   APIGetUsageRecordsResponseItem,
@@ -9,47 +8,24 @@ import {
 } from '@/api/purse.ts';
 import { filterLabelItem, filterTable } from '@/interface/common.ts';
 
-const tableColumns = [
-  { title: '充值时间', dataIndex: 'recharge_time_label' },
-  { title: '活动状态', dataIndex: 'status_label' },
-  { title: '数据来源备注', dataIndex: 'source' },
-  { title: '数据原因', dataIndex: 'reason' },
-  { title: '过期时间', dataIndex: 'expire_time' },
-  { title: '创建时间', dataIndex: 'created_at' },
-];
 const params = reactive<APIGetUsageRecordsParams>({
   status: null,
   page: 1,
-  limit: 10,
+  limit: 15,
 });
-const loading = ref(false);
 const pageLoading = ref(false);
 const tableData = ref<APIGetUsageRecordsResponseItem[]>([]);
 const tableFilter = ref<filterTable<APIGetUsageRecordsParams>[]>([]);
-const tablePagination = reactive<TablePaginationConfig>({
-  current: params.page,
-  pageSize: params.limit,
-  hideOnSinglePage: true,
-  pageSizeOptions: ['10', '15', '20'],
-  showTotal(total) {
-    return `共 ${total} 条`;
-  },
-  showSizeChanger: true,
-  onChange(page, pageSize) {
-    pageLoading.value = true;
-    params.page = page;
-    params.limit = pageSize;
-    tablePagination.current = page;
-    tablePagination.pageSize = pageSize;
-  },
-  total: 0,
-});
+const tableTotal = ref<number>(0);
+
+function onChange() {
+  pageLoading.value = true;
+}
 
 const { run: getTableList } = useRequest(
   async () => {
     return getUsageRecords(toRaw(params)).then((res) => {
       tableData.value = res.list;
-      tablePagination.total = res.total;
       tableFilter.value = res.filter;
       formatLabels();
       pageLoading.value = false;
@@ -74,7 +50,6 @@ function formatLabels() {
 watch(params, () => {
   if (pageLoading.value === false) {
     params.page = 1;
-    tablePagination.current = 1;
   }
   getTableList();
 });
@@ -85,9 +60,9 @@ onMounted(getTableList);
 </script>
 
 <template>
-  <div class="w-[1200px] m-auto">
+  <div class="w-[1200px] max-w-full m-auto">
     <div class="flex items-start justify-between mb-4">
-      <a-form class="filter" layout="inline">
+      <a-form class="filter sm:hidden" layout="inline">
         <a-form-item
           v-for="item in tableFilter"
           :key="item.name"
@@ -117,14 +92,45 @@ onMounted(getTableList);
       </a-form>
     </div>
 
-    <a-table
-      :columns="tableColumns"
-      :dataSource="tableData"
-      :loading="loading"
-      :pagination="tablePagination"
-      :row-key="(record: APIGetUsageRecordsResponseItem) => record.source"
-      bordered
-      class="w-full mb-4"
+    <div class="flex flex-wrap gap-5 mb-5">
+      <div
+        class="bg-white dark:bg-gray-800 p-4 rounded sm:w-full w-[386px]"
+        v-for="item in tableData"
+        :key="item.source"
+      >
+        <div class="">{{ item.source }}</div>
+
+        <a-divider class="my-2" />
+        <div class="flex items-center justify-between">
+          <span class="text-gray-600">充值时长</span>
+          <span>{{ item.recharge_time_label || '0' }}</span>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-gray-600">活动状态</span>
+          <span>{{ item.status_label || '0' }}</span>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-gray-600">使用记录</span>
+          <span>{{ item.reason || '无' }}</span>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-gray-600">过期时间 </span>
+          <span>{{ item.expire_time || '不过期' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <a-pagination
+      class="flex justify-center"
+      v-model:current="params.page"
+      v-model:page-size="params.limit"
+      :total="tableTotal"
+      :hide-on-single-page="true"
+      @change="onChange"
+      :show-total="(total: number) => `共 ${total} 条`"
     />
   </div>
 </template>

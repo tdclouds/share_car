@@ -131,14 +131,17 @@ onMounted(() => {
 </script>
 <template name="Home">
   <div class="home flex flex-col items-center gap-5">
-    <div v-if="userStore.account_id" class="flex w-[1200px] gap-5">
+    <div
+      v-if="userStore.account_id"
+      class="flex flex-wrap w-[1200px] max-w-full sm:flex-col-reverse gap-5"
+    >
       <!--      <div class="bg-white w-[300px] border rounded-xl flex-shrink-0">公告</div>-->
 
       <div
         :style="{
           height: size.height + 'px',
         }"
-        class="flex-1 flex flex-col bg-white dark:bg-gray-800 dark:border-gray-900 border rounded-xl overflow-hidden"
+        class="flex-1 sm:min-w-[300px] flex flex-col bg-white dark:bg-gray-800 dark:border-gray-900 border rounded-xl overflow-hidden"
       >
         <div class="p-5 flex justify-between items-center">
           <h4>套餐</h4>
@@ -191,7 +194,31 @@ onMounted(() => {
         </div>
       </div>
 
-      <div ref="serverRef" class="w-[300px] flex flex-col gap-5 flex-shrink-0">
+      <div
+        ref="serverRef"
+        class="w-[300px] sm:w-full flex flex-col gap-5 flex-shrink-0"
+      >
+        <div class="copilot-box rounded-xl p-5">
+          <ul>
+            <li class="flex justify-between mb-2">
+              <span class="font-bold text-gray-50">Copilot</span>
+              <a-switch
+                :checked="copilotInfo.is_paused"
+                :checked-value="0"
+                :loading="changeCopilotStatusLoading"
+                :un-checked-value="1"
+                checked-children="开"
+                class="copilot-green"
+                un-checked-children="关"
+                @click="updateCopilotStatus"
+              />
+            </li>
+            <li class="flex justify-between items-center text-gray-200">
+              <span class="">剩余时间</span>
+              <span class="text-2xl">{{ remaining_time }}</span>
+            </li>
+          </ul>
+        </div>
         <div
           class="bg-white dark:bg-gray-800 dark:border-gray-900 border rounded-xl p-5"
         >
@@ -230,27 +257,6 @@ onMounted(() => {
             </li>
           </ul>
         </div>
-        <div class="copilot-box rounded-xl p-5">
-          <ul>
-            <li class="flex justify-between mb-2">
-              <span class="font-bold text-gray-50">Copilot</span>
-              <a-switch
-                :checked="copilotInfo.is_paused"
-                :checked-value="0"
-                :loading="changeCopilotStatusLoading"
-                :un-checked-value="1"
-                checked-children="开"
-                class="copilot-green"
-                un-checked-children="关"
-                @click="updateCopilotStatus"
-              />
-            </li>
-            <li class="flex justify-between items-center text-gray-200">
-              <span class="">剩余时间</span>
-              <span class="text-2xl">{{ remaining_time }}</span>
-            </li>
-          </ul>
-        </div>
         <div
           class="bg-white dark:bg-gray-800 dark:border-gray-900 border rounded-xl p-5"
         >
@@ -273,7 +279,7 @@ onMounted(() => {
         rgba(45, 30, 247, 1) 0%,
         rgba(113, 66, 230, 1) 35%,
         rgba(76, 103, 232, 1) 100%
-      ) -170px -160px /500px 300px no-repeat;
+      ) -170px -160px /600px 300px no-repeat;
 }
 
 .copilot-box .copilot-green.ant-switch-checked {

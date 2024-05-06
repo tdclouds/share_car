@@ -2,6 +2,7 @@
 import { computed, reactive, ref, watch } from 'vue';
 import { useDarkMode } from 'vue-hooks-plus';
 import { useRoute, useRouter } from 'vue-router';
+import { MenuOutlined } from '@ant-design/icons-vue';
 import { MenuProps } from 'ant-design-vue';
 import { BASE_URL } from '@/config';
 import { useSystemStore } from '@/store/system.ts';
@@ -56,8 +57,10 @@ watch(route, (value) => {
   current.value = [value.path];
 });
 
+const open = ref(false);
 function clickMenu({ key }: { key: string }) {
   router.push(key);
+  open.value = false;
 }
 
 const serverTime = computed(() => {
@@ -67,7 +70,7 @@ const serverTime = computed(() => {
 const logout = userStore.logout;
 
 function goLogin() {
-  open(
+  window.open(
     `${BASE_URL}/oauth/discourse/redirect?callback_url=${location.origin}/redirect`,
     '_self',
   );
@@ -79,7 +82,7 @@ function goLogin() {
     <a-layout-header
       :class="{ dark: darkMode }"
       :style="headerStyle"
-      class="header flex items-center justify-between w-full z-10 fixed transition"
+      class="header flex items-center justify-between w-full z-10 fixed transition sm:ps-[1.25rem!important] sm:pe-[1.25rem!important]"
     >
       <router-link to="/">
         <img
@@ -94,35 +97,66 @@ function goLogin() {
         v-if="userStore.account_id"
         v-model:selectedKeys="current"
         :items="menus"
+        class="flex sm:hidden"
         mode="horizontal"
         @click="clickMenu"
       />
-
-      <template v-if="userStore.account_id">
-        <a-dropdown placement="bottom">
-          <a class="ant-dropdown-link" @click.prevent>
-            {{ userInfo.nick_name }}
-          </a>
-          <template #overlay>
-            <a-menu>
-              <a-menu-item @click="logout">退出登录</a-menu-item>
-            </a-menu>
+      <div class="flex items-center">
+        <template v-if="userStore.account_id">
+          <a-dropdown placement="bottom">
+            <a class="ant-dropdown-link" @click.prevent>
+              {{ userInfo.nick_name }}
+            </a>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item @click="logout">退出登录</a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
+        </template>
+        <span v-else>
+          <a-button @click="goLogin">登录</a-button>
+        </span>
+        <a-button
+          :type="open ? 'primary' : 'text'"
+          class="hidden sm:block"
+          @click="open = true"
+        >
+          <template #icon>
+            <MenuOutlined />
           </template>
-        </a-dropdown>
-      </template>
-      <span v-else>
-        <a-button @click="goLogin">登录</a-button>
-      </span>
+        </a-button>
+      </div>
+      <a-drawer v-model:open="open" placement="right">
+        <a-menu
+          v-if="userStore.account_id"
+          v-model:selectedKeys="current"
+          :items="menus"
+          mode="inline"
+          style="border-inline-end: 0; background: transparent"
+          @click="clickMenu"
+        />
+      </a-drawer>
     </a-layout-header>
-    <a-layout-content class="dark:text-white pt-20 flex-1 content">
+    <a-layout-content class="dark:text-white flex-1 content sm:px-5 pt-20">
       <router-view />
     </a-layout-content>
     <a-layout-footer class="flex justify-between">
-      <div>
-        <a-button type="link">用户协议</a-button>
-        <a-button type="link">隐私政策</a-button>
+      <div class="flex sm:flex-col">
+        <router-link to="/">
+          <a-button type="link">首页</a-button>
+        </router-link>
+        <!--        <router-link to="/intro">-->
+        <!--          <a-button type="link">平台介绍</a-button>-->
+        <!--        </router-link>-->
+        <!--        <router-link to="/FAQ">-->
+        <!--          <a-button type="link" href="/FAQ">常见问题</a-button>-->
+        <!--        </router-link>-->
+        <router-link to="/refund-agreement">
+          <a-button type="link" href="/refund-agreement">退款协议</a-button>
+        </router-link>
       </div>
-      <div>
+      <div class="flex sm:flex-col">
         <span>服务器时间：</span>
         <span class="text-blue-500">{{ serverTime }}</span>
       </div>

@@ -102,7 +102,7 @@ onMounted(async () => {
 <template>
   <div class="w-[1200px] m-auto">
     <div class="flex items-start justify-between mb-4">
-      <a-form class="filter" layout="inline">
+      <a-form class="filter sm:hidden" layout="inline">
         <a-form-item label="钱包">
           <a-select
             v-model:value="coinType"

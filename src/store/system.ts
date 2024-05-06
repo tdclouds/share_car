@@ -11,7 +11,7 @@ export const useSystemStore = defineStore('system', {
     };
   },
   actions: {
-    initTimeStamp(timeStamp: number) {
+    initTimeStamp(timeStamp: number = Date.now()) {
       this.timeStamp = timeStamp;
       clearInterval(this.timer);
       this.timer = setInterval(() => {

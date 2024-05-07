@@ -226,7 +226,7 @@ onMounted(() => {
 
       <div
         ref="serverRef"
-        class="w-[300px] sm:w-full flex flex-col gap-5 flex-shrink-0"
+        class="w-[320px] sm:w-full flex flex-col gap-5 flex-shrink-0"
       >
         <div class="copilot-box rounded-xl p-5">
           <ul>

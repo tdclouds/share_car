@@ -269,7 +269,7 @@ onMounted(() => {
               <span class="text-gray-600 dark:text-gray-200">{{
                 item.type_label
               }}</span>
-              <span>{{ item.balance_label }}</span>
+              <span>{{ item.balance_label || '0' }}</span>
             </li>
             <li class="flex flex-col justify-between gap-2">
               <a-input

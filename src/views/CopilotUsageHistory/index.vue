@@ -122,7 +122,7 @@ onMounted(getTableList);
 
         <div class="flex items-center justify-between">
           <span>对话次数</span>
-          <span>{{ item.total_req_chat_label || '0' }}</span>
+          <span>{{ item.total_chat_req_label || '0' }}</span>
         </div>
 
         <div class="flex items-center justify-between">

@@ -146,7 +146,7 @@ export interface APIGetCopilotSessionResponseItem {
   created_at: string;
   total_time_label: string; // 使用时间
   total_req_label: string; // 请求次数（包含chat、prom）
-  total_req_chat_label: string; // 请求次数 仅对话
+  total_chat_req_label: string; // 请求次数 仅对话
   total_prompt_req_label: string; // 请求次数 仅代码提示
 }
 

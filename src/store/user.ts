@@ -1,6 +1,6 @@
-import { useRouter } from 'vue-router';
 import { defineStore } from 'pinia';
 import { getUserInfo, logout } from '@/api/user.ts';
+import router from '@/router';
 import { getToken, removeToken } from '@/utils/auth.ts';
 
 export interface IUserInfo {
@@ -59,14 +59,12 @@ export const useUserStore = defineStore('userStore', {
         .catch(this.logout);
     },
     async logout() {
-      const router = useRouter();
-      const token = getToken();
-      if (token) {
+      this.account_id = '';
+      if (getToken()) {
         await logout();
       }
 
       removeToken();
-      this.account_id = '';
       await router.push('/');
     },
   },

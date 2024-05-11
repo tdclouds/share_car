@@ -10,7 +10,9 @@ function checkForUpdates() {
         Modal.info({
           title: '页面已更新，需要刷新页面',
           okText: '刷新',
-          onOk: location.reload,
+          onOk() {
+            location.reload();
+          },
         });
       } else {
         content = newContent;

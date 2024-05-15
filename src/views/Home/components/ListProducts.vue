@@ -2,20 +2,24 @@
 import { onMounted, reactive, ref, toRaw } from 'vue';
 import { useRequest } from 'vue-hooks-plus';
 import { getGoodList, goodListItem, goodListParams } from '@/api/good.ts';
+import { filterTable } from '@/interface/common.ts';
 import { formatPrice } from '@/utils/format.ts';
 
 const params = reactive<goodListParams>({
-  limit: '20',
+  limit: 10,
   page: 1,
   search_value: '',
 });
 const tableData = ref<goodListItem[]>([]);
 const tableDataTotal = ref(0);
+const tableFilter = ref<filterTable<goodListParams>[]>([]);
+
 const { run: getTableList } = useRequest(
   async () => {
     return getGoodList(toRaw(params)).then((res) => {
       tableData.value = res.list;
       tableDataTotal.value = res.total;
+      tableFilter.value = res.filter;
     });
   },
   {
@@ -24,12 +28,30 @@ const { run: getTableList } = useRequest(
   },
 );
 
+function searchHandle() {
+  params.page = 1;
+  getTableList();
+}
+
 onMounted(() => {
   getTableList();
 });
 </script>
 
 <template>
+  <div class="flex w-full max-w-[1200px]">
+    <div class="ml-auto sm:w-full">
+      <a-input-search
+        v-model:value="params.search_value"
+        @search="searchHandle"
+        class="sm:flex-1"
+        size="large"
+        prefixCls="flex items-center ant-input-search"
+        placeholder="搜索"
+        enter-button
+      />
+    </div>
+  </div>
   <div class="list flex flex-wrap w-[1200px] max-w-full gap-5 mb-5">
     <router-link
       v-for="item in tableData"

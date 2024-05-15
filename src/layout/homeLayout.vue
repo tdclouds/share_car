@@ -120,6 +120,7 @@ function goLogin() {
         <a-button
           :type="open ? 'primary' : 'text'"
           class="hidden sm:block"
+          v-if="userStore.account_id"
           @click="open = true"
         >
           <template #icon>
@@ -129,7 +130,6 @@ function goLogin() {
       </div>
       <a-drawer v-model:open="open" placement="right">
         <a-menu
-          v-if="userStore.account_id"
           v-model:selectedKeys="current"
           :items="menus"
           mode="inline"

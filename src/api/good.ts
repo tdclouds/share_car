@@ -2,7 +2,7 @@ import { APIListResponse } from '@/interface/common.ts';
 import request from '@/utils/request.ts';
 
 export interface goodListParams {
-  limit: string;
+  limit: number;
   page: number;
   search_value: string;
 }

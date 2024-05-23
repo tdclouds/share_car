@@ -44,7 +44,7 @@ onMounted(() => {
       <a-input-search
         v-model:value="params.search_value"
         @search="searchHandle"
-        class="sm:flex-1"
+        class="sm:flex-1 min-w-[320px]"
         size="large"
         prefixCls="flex items-center ant-input-search"
         placeholder="搜索"

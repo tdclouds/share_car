@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Modal } from 'ant-design-vue';
 import { getDiscourseSSO } from '@/api/user.ts';
 import { setToken } from '@/utils/auth.ts';
 
@@ -31,14 +30,16 @@ function handleGithubAuthorized() {
     });
 }
 
+const open = ref<boolean>(false);
+const errorModalContent = ref('');
+
 function showErrorModal(content: string) {
-  Modal.error({
-    title: '提示',
-    content: content,
-    onOk() {
-      router.replace('home');
-    },
-  });
+  errorModalContent.value = content;
+  open.value = true;
+}
+
+function handleOk() {
+  router.replace('home');
 }
 
 onMounted(handleGithubAuthorized);
@@ -48,6 +49,17 @@ onMounted(handleGithubAuthorized);
   <div class="flex items-center justify-center h-[100vh]">
     <div class="loader"></div>
   </div>
+  <a-modal
+    v-model:open="open"
+    title="提示"
+    :maskClosable="false"
+    :closable="false"
+  >
+    <template #footer>
+      <a-button type="primary" @click="handleOk">确定</a-button>
+    </template>
+    <div v-html="errorModalContent"></div>
+  </a-modal>
 </template>
 
 <style>

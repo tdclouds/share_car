@@ -36,10 +36,8 @@ const remaining_time = computed(() => {
 function startTimer() {
   if (copilotInfo.value.is_paused == 1) return;
 
-  setTimeout(() => {
-    copilotInfo.value.remaining_time -= 1;
-    startTimer();
-  }, 1000);
+  copilotInfo.value.remaining_time -= 1;
+  setTimeout(startTimer, 1000);
 }
 
 function getCopilotInfo() {
@@ -57,6 +55,7 @@ function updateCopilotStatus() {
     .then((res) => {
       copilotInfo.value.remaining_time = res.remaining_time;
       copilotInfo.value.is_paused = res.is_paused;
+      getCopilotRecharge();
       startTimer();
     })
     .finally(() => {
@@ -208,6 +207,9 @@ onMounted(() => {
                       'second',
                     )
                   }}</span
+                >
+                <span v-if="item.expire_time"
+                  >过期时间：{{ item.expire_time }}</span
                 >
                 <span
                   >已使用：{{ duration(+(item.reason || '0'), 'second') }}</span

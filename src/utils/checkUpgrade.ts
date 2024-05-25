@@ -1,12 +1,13 @@
 import { Modal } from 'ant-design-vue';
 
-let content: string = '';
+let scriptName: string = '';
 
 function checkForUpdates() {
   fetch(location.href)
     .then((res) => res.text())
-    .then((newContent) => {
-      if (content && content !== newContent) {
+    .then((content) => {
+      const matchArray = content.match(/src="\/assets\/(.*?)"/);
+      if (scriptName && scriptName !== matchArray?.[1]) {
         Modal.info({
           title: '页面已更新，需要刷新页面',
           okText: '刷新',
@@ -15,7 +16,7 @@ function checkForUpdates() {
           },
         });
       } else {
-        content = newContent;
+        scriptName = matchArray?.[1] || '';
         setTimeout(checkForUpdates, 60000);
       }
     });

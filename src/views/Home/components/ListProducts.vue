@@ -62,16 +62,16 @@ onMounted(() => {
       <img
         :alt="item.gd_name"
         :src="item.picture"
-        class="w-[138px] h-[138px]"
+        class="w-[138px] h-full object-contain"
         loading="lazy"
       />
       <div class="p-2 flex-1">
         <h4 class="text-2xl">{{ item.gd_name }}</h4>
-        <div class="overflow-hidden flex flex-wrap gap-1 my-1">
+        <div class="overflow-hidden flex flex-wrap gap-1 my-2">
           <div
             v-for="tag in item.gd_keywords"
             :key="item.gd_no + tag"
-            class="py-1 px-2 mr-1 rounded bg-gray-200 text-gray-800 dark:bg-gray-500 dark:text-gray-200"
+            class="py-1 px-2 rounded bg-gray-200 text-gray-800 dark:bg-gray-500 dark:text-gray-200"
           >
             {{ tag }}
           </div>

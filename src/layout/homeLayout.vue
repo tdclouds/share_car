@@ -4,7 +4,7 @@ import { useDarkMode } from 'vue-hooks-plus';
 import { useRoute, useRouter } from 'vue-router';
 import { MenuOutlined } from '@ant-design/icons-vue';
 import { MenuProps } from 'ant-design-vue';
-import { BASE_URL } from '@/config';
+import { BASE_URL, DOCS_URL, FORUM_URL } from '@/config';
 import { useSystemStore } from '@/store/system.ts';
 import { useUserStore } from '@/store/user.ts';
 import { getUTCDate } from '@/utils/format.ts';
@@ -102,6 +102,8 @@ function goLogin() {
         @click="clickMenu"
       />
       <div class="flex items-center">
+        <a-button type="link" :href="FORUM_URL" target="_blank">论坛</a-button>
+        <a-button type="link" :href="DOCS_URL" target="_blank">文档</a-button>
         <template v-if="userStore.account_id">
           <a-dropdown placement="bottom">
             <a class="ant-dropdown-link" @click.prevent>
@@ -115,7 +117,7 @@ function goLogin() {
           </a-dropdown>
         </template>
         <span v-else>
-          <a-button @click="goLogin">登录</a-button>
+          <a-button type="primary" @click="goLogin">登录</a-button>
         </span>
         <a-button
           :type="open ? 'primary' : 'text'"

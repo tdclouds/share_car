@@ -8,7 +8,7 @@ RUN npm i -g pnpm
 RUN pnpm install
 RUN pnpm build
 
-FROM nginx:alpine
+FROM nginx
 
 COPY --from=builder /code/dist /usr/share/nginx/html
 COPY --from=builder /code/default.conf /etc/nginx/conf.d/default.conf

@@ -22,4 +22,6 @@ function checkForUpdates() {
     });
 }
 
-checkForUpdates();
+if (import.meta.env.MODE === 'production') {
+  checkForUpdates();
+}

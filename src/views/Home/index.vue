@@ -33,11 +33,13 @@ const remaining_time = computed(() => {
   return duration(copilotInfo.value.remaining_time, 'second');
 });
 
+const timer = ref();
 function startTimer() {
   if (copilotInfo.value.is_paused == 1) return;
+  clearTimeout(timer.value);
 
   copilotInfo.value.remaining_time -= 1;
-  setTimeout(startTimer, 1000);
+  timer.value = setTimeout(startTimer, 1000);
 }
 
 function getCopilotInfo() {
@@ -150,11 +152,23 @@ function onResize() {
   };
 }
 
+const visibleTimer = ref();
+function visibilityChangeEvent() {
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      visibleTimer.value = setTimeout(getCopilotInfo, 1000);
+    } else {
+      clearTimeout(visibleTimer.value);
+    }
+  });
+}
+
 onMounted(() => {
   if (userStore.account_id) {
     getCopilotInfo();
     getCoinList();
     getCopilotRecharge();
+    visibilityChangeEvent();
   }
 });
 </script>

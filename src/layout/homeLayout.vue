@@ -94,7 +94,7 @@ function goLogin() {
       </router-link>
 
       <a-menu
-        v-if="userStore.account_id"
+        v-if="userInfo.account_id"
         v-model:selectedKeys="current"
         :items="menus"
         class="flex sm:hidden"
@@ -104,10 +104,10 @@ function goLogin() {
       <div class="flex items-center">
         <a-button type="link" :href="FORUM_URL" target="_blank">论坛</a-button>
         <a-button type="link" :href="DOCS_URL" target="_blank">文档</a-button>
-        <template v-if="userStore.account_id">
+        <template v-if="userInfo.account_id">
           <a-dropdown placement="bottom">
             <a class="ant-dropdown-link" @click.prevent>
-              {{ userInfo.nick_name }}
+              {{ userInfo.nick_name || '无名氏' }}
             </a>
             <template #overlay>
               <a-menu>
@@ -122,7 +122,7 @@ function goLogin() {
         <a-button
           :type="open ? 'primary' : 'text'"
           class="hidden sm:block"
-          v-if="userStore.account_id"
+          v-if="userInfo.account_id"
           @click="open = true"
         >
           <template #icon>

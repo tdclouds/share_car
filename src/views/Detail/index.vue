@@ -338,7 +338,7 @@ onMounted(() => {
           class="w-full"
           type="primary"
           @click="handleSubmit"
-          >{{ submitDisabled ? '你不配' : '立即购买' }}
+          >{{ submitDisabled ? '无法购买' : '立即购买' }}
         </a-button>
       </div>
     </div>
